@@ -1,0 +1,63 @@
+# =============================================================
+# Skill-Bridge Academy — Root .gitignore
+# Covers: frontend (Node/Vite/React) + backend (Python/Flask/uv)
+# =============================================================
+
+# ─── OS / Editor ─────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*.swo
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# ─── Frontend — Node / Vite ──────────────────────────────────
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+frontend/coverage/
+frontend/.env
+frontend/.env.local
+frontend/.env.*.local
+frontend/package-lock.json     # keep package.json, ignore lock only if desired
+# Uncomment the line below if you prefer not to track package-lock:
+# frontend/package-lock.json
+
+# ─── Backend — Python / uv ───────────────────────────────────
+backend/.venv/
+backend/__pycache__/
+backend/**/__pycache__/
+backend/*.pyc
+backend/*.pyo
+backend/*.pyd
+backend/.Python
+backend/build/
+backend/dist/
+backend/eggs/
+backend/*.egg-info/
+backend/.eggs/
+backend/.pytest_cache/
+backend/.mypy_cache/
+backend/.ruff_cache/
+
+# Secrets / environment
+backend/.env
+backend/.env.*
+!backend/.env.example
+
+# Uploaded media (large binary files, not for version control)
+backend/uploads/
+
+# uv artefacts (lock file should be committed for reproducibility)
+# backend/uv.lock   ← intentionally NOT ignored; commit this
+
+# ─── Misc ────────────────────────────────────────────────────
+*.log
+*.pid
+*.seed
+*.gz
+*.tar
+*.zip
