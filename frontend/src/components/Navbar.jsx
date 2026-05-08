@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import { ThemeContext } from '../context/ThemeContext';
+import logoImg from '../assets/logo.png';
 
 const Navbar = () => {
     const { user, logout } = useContext(AuthContext);
@@ -16,7 +17,8 @@ const Navbar = () => {
     return (
         <nav className="glass-nav">
             <div className="nav-brand">
-                <Link to="/">
+                <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', textDecoration: 'none' }}>
+                    <img src={logoImg} alt="Skill-Bridge Academy Logo" className="dark:invert" style={{ width: '52px', height: '52px', objectFit: 'contain' }} />
                     <h2>Skill-Bridge <span style={{color: "var(--primary-color)"}}>A.I.</span></h2>
                 </Link>
             </div>

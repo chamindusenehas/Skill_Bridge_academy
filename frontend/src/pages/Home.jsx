@@ -6,6 +6,7 @@ import { HowItWorksSection } from '@/components/how-it-works-section'
 import { RecommendationDemo } from '@/components/recommendation-demo'
 import { TechStackSection } from '@/components/tech-stack-section'
 import { TestimonialsSection } from '@/components/testimonials-section'
+import { ReviewSection } from '@/components/review-section'
 import { CTASection } from '@/components/cta-section'
 import { Footer } from '@/components/footer'
 import { AnimatedBackground, FloatingShapes, CursorGlow } from '@/components/animated-background'
@@ -27,6 +28,7 @@ const Home = () => {
         <HowItWorksSection />
         <RecommendationDemo />
         <TestimonialsSection />
+        <ReviewSection />
         <TechStackSection />
         <CTASection />
         <Footer />

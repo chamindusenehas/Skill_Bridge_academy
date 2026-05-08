@@ -6,7 +6,8 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Label } from '@/components/ui/label'
-import { Sparkles, ArrowRight } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
+import logoImg from '@/assets/logo.png'
 import { AnimatedBackground } from '@/components/animated-background'
 
 const Login = () => {
@@ -57,11 +58,11 @@ const Login = () => {
         <Card className="border-border/50 bg-card/50 backdrop-blur-xl shadow-2xl">
           <CardHeader className="space-y-2 text-center pb-6">
             <motion.div 
-              className="mx-auto w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center mb-2"
+              className="mx-auto w-20 h-20 flex items-center justify-center mb-2"
               whileHover={{ rotate: 180 }}
               transition={{ duration: 0.5 }}
             >
-              <Sparkles className="w-6 h-6 text-primary-foreground" />
+              <img src={logoImg} alt="Skill-Bridge Academy Logo" className="w-full h-full object-contain dark:invert" />
             </motion.div>
             <CardTitle className="text-2xl font-bold tracking-tight">System Portal Auth</CardTitle>
             <CardDescription>Enter your credentials to access the terminal</CardDescription>

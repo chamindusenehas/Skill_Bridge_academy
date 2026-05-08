@@ -5,11 +5,13 @@ from database import init_db
 from routes_auth import auth_bp
 from routes_courses import courses_bp
 from routes_uploads import uploads_bp
+from routes_enrollments import enrollments_bp
+from routes_reviews import reviews_bp
 
 def create_app():
     app = Flask(__name__)
-    # Allow requests from the React frontend running on localhost:5173
-    CORS(app, resources={r"/api/*": {"origins": "*"}})
+    # Allow all origins for both /api/* and /uploads/*
+    CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=False)
 
     # Initialize MongoDB connection
     init_db(app)
@@ -18,6 +20,8 @@ def create_app():
     app.register_blueprint(auth_bp)
     app.register_blueprint(courses_bp)
     app.register_blueprint(uploads_bp)
+    app.register_blueprint(enrollments_bp)
+    app.register_blueprint(reviews_bp)
 
     # Initialize uploads folder
     UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), 'uploads')

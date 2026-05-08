@@ -44,7 +44,7 @@ def upload_file(current_user):
         return jsonify({
             "message": "File successfully uploaded",
             "filename": unique_filename,
-            "url": f"/uploads/{unique_filename}"
+            "url": f"http://localhost:5000/uploads/{unique_filename}"
         }), 201
 
     return jsonify({"message": "File upload failed"}), 500

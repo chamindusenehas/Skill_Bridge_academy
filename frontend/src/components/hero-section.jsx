@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, useScroll, useTransform, useInView } from 'framer-motion'
-import { ArrowRight, Brain, Shield, Cpu, Database, Code, Cloud, Zap, ChevronDown } from 'lucide-react'
+import { ArrowRight, Brain, Shield, Cpu, Database, Code, Cloud, Zap, ChevronDown, Star } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
 const floatingIcons = [
@@ -19,12 +19,20 @@ export function HeroSection() {
   const [currentWord, setCurrentWord] = useState(0)
   const [displayText, setDisplayText] = useState('')
   const [isDeleting, setIsDeleting] = useState(false)
+  const [stats, setStats] = useState({ total_courses: null, total_learners: null, avg_rating: null, total_reviews: null })
   const containerRef = useRef(null)
   const isInView = useInView(containerRef, { once: true })
 
   const { scrollYProgress } = useScroll({ target: containerRef, offset: ['start start', 'end start'] })
   const y = useTransform(scrollYProgress, [0, 1], [0, 200])
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0])
+
+  useEffect(() => {
+    fetch('http://localhost:5000/api/reviews/stats')
+      .then(r => r.json())
+      .then(d => setStats(d))
+      .catch(() => {})
+  }, [])
 
   useEffect(() => {
     const word = techWords[currentWord]
@@ -46,6 +54,21 @@ export function HeroSection() {
     }, isDeleting ? 50 : 100)
     return () => clearTimeout(timeout)
   }, [displayText, isDeleting, currentWord])
+
+  const satisfaction = stats.avg_rating
+    ? `${stats.avg_rating}/5`
+    : '—'
+  const coursesLabel = stats.total_courses != null ? `${stats.total_courses}` : '—'
+  const learnersLabel = stats.total_learners != null
+    ? stats.total_learners >= 1000 ? `${(stats.total_learners / 1000).toFixed(1)}K+` : `${stats.total_learners}+`
+    : '—'
+
+  const displayStats = [
+    { value: coursesLabel, label: 'Courses' },
+    { value: learnersLabel, label: 'Learners' },
+    { value: satisfaction, label: 'Satisfaction' },
+    { value: '24/7', label: 'AI Support' },
+  ]
 
   return (
     <section ref={containerRef} className="relative min-h-screen flex items-center justify-center overflow-hidden">
@@ -145,25 +168,21 @@ export function HeroSection() {
               </span>
             </Button>
           </Link>
-          <Link to="/dashboard">
+          <Link to="/courses">
             <Button variant="outline" size="lg" className="px-8 py-6 text-base font-semibold border-border/50 hover:bg-secondary/80 hover:border-primary/50 transition-all duration-300">
               Explore Courses
             </Button>
           </Link>
         </motion.div>
 
+        {/* Dynamic stats */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6, delay: 0.4 }}
           className="flex flex-wrap items-center justify-center gap-8 mt-16"
         >
-          {[
-            { value: '500+', label: 'Courses' },
-            { value: '50K+', label: 'Learners' },
-            { value: '95%', label: 'Satisfaction' },
-            { value: '24/7', label: 'AI Support' },
-          ].map((stat, idx) => (
+          {displayStats.map((stat, idx) => (
             <motion.div
               key={stat.label}
               initial={{ opacity: 0, scale: 0.5 }}
@@ -171,8 +190,13 @@ export function HeroSection() {
               transition={{ delay: 0.5 + idx * 0.1 }}
               className="text-center"
             >
-              <div className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-                {stat.value}
+              <div className="flex items-center justify-center gap-1">
+                {stat.label === 'Satisfaction' && stats.avg_rating && (
+                  <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
+                )}
+                <div className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+                  {stat.value}
+                </div>
               </div>
               <div className="text-sm text-muted-foreground">{stat.label}</div>
             </motion.div>

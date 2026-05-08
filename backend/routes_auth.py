@@ -4,6 +4,8 @@ import bcrypt
 import jwt
 from flask import Blueprint, request, jsonify
 from database import get_db
+from auth_middleware import token_required
+from bson import ObjectId
 
 auth_bp = Blueprint('auth_bp', __name__)
 
@@ -66,6 +68,7 @@ def login():
     token_payload = {
         "user_id": str(user['_id']),
         "email": user['email'],
+        "name": user['name'],
         "role": user['role'],
         "exp": datetime.datetime.utcnow() + datetime.timedelta(hours=24)
     }
@@ -79,6 +82,46 @@ def login():
             "id": str(user['_id']),
             "name": user['name'],
             "email": user['email'],
-            "role": user['role']
+            "role": user['role'],
+            "profile_picture": user.get('profile_picture')
         }
     }), 200
+
+@auth_bp.route('/api/profile', methods=['PUT'])
+@token_required
+def update_profile(current_user):
+    data = request.json
+    db = get_db()
+    users = db.users
+
+    user_id = ObjectId(current_user['user_id'])
+    
+    update_data = {}
+    if 'name' in data:
+        update_data['name'] = data['name']
+    if 'email' in data:
+        # Check if new email is already taken
+        existing = users.find_one({"email": data['email'], "_id": {"$ne": user_id}})
+        if existing:
+            return jsonify({"message": "Email already in use"}), 409
+        update_data['email'] = data['email']
+    if 'profile_picture' in data:
+        update_data['profile_picture'] = data['profile_picture']
+
+    if not update_data:
+        return jsonify({"message": "No data provided to update"}), 400
+
+    users.update_one({"_id": user_id}, {"$set": update_data})
+    updated_user = users.find_one({"_id": user_id})
+
+    return jsonify({
+        "message": "Profile updated successfully",
+        "user": {
+            "id": str(updated_user['_id']),
+            "name": updated_user['name'],
+            "email": updated_user['email'],
+            "role": updated_user['role'],
+            "profile_picture": updated_user.get('profile_picture')
+        }
+    }), 200
+

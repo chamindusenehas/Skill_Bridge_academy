@@ -88,8 +88,6 @@ export function CTASection() {
             >
               {[
                 { icon: Zap, text: 'AI-Powered' },
-                { icon: Users, text: '50K+ Learners' },
-                { icon: Award, text: 'Certified Courses' },
               ].map((item) => (
                 <div key={item.text} className="flex items-center gap-2 text-white/80">
                   <item.icon className="w-5 h-5" />
