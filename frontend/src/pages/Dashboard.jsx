@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { AuthContext } from '../context/AuthContext'
 import { Link, useNavigate } from 'react-router-dom'
-import { PlusCircle, Search, Laptop, Loader2, BookOpen, LogOut, GraduationCap, Play } from 'lucide-react'
+import { PlusCircle, Search, Laptop, Loader2, BookOpen, LogOut, GraduationCap, Play, Sparkles } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -151,6 +151,14 @@ const Dashboard = () => {
                 <Button className="bg-gradient-to-r from-primary to-accent gap-2">
                   <PlusCircle className="w-4 h-4" />
                   <span className="hidden sm:inline">Add Course</span>
+                </Button>
+              </Link>
+            )}
+            {user.role === 'learner' && (
+              <Link to="/recommendations">
+                <Button className="bg-gradient-to-r from-primary to-accent gap-2 shadow-md hover:shadow-lg transition-all">
+                  <Sparkles className="w-4 h-4" />
+                  <span className="hidden sm:inline">AI Recommendations</span>
                 </Button>
               </Link>
             )}

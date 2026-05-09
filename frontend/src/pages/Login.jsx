@@ -59,8 +59,6 @@ const Login = () => {
           <CardHeader className="space-y-2 text-center pb-6">
             <motion.div 
               className="mx-auto w-20 h-20 flex items-center justify-center mb-2"
-              whileHover={{ rotate: 180 }}
-              transition={{ duration: 0.5 }}
             >
               <img src={logoImg} alt="Skill-Bridge Academy Logo" className="w-full h-full object-contain dark:invert" />
             </motion.div>

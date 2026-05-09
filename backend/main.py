@@ -7,6 +7,7 @@ from routes_courses import courses_bp
 from routes_uploads import uploads_bp
 from routes_enrollments import enrollments_bp
 from routes_reviews import reviews_bp
+from routes_recommendations import recommendations_bp
 
 def create_app():
     app = Flask(__name__)
@@ -22,6 +23,7 @@ def create_app():
     app.register_blueprint(uploads_bp)
     app.register_blueprint(enrollments_bp)
     app.register_blueprint(reviews_bp)
+    app.register_blueprint(recommendations_bp)
 
     # Initialize uploads folder
     UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), 'uploads')

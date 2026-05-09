@@ -56,7 +56,7 @@ export function HeroSection() {
   }, [displayText, isDeleting, currentWord])
 
   const satisfaction = stats.avg_rating
-    ? `${stats.avg_rating}/5`
+    ? `${Math.round((stats.avg_rating / 5) * 100)}%`
     : '—'
   const coursesLabel = stats.total_courses != null ? `${stats.total_courses}` : '—'
   const learnersLabel = stats.total_learners != null
@@ -160,7 +160,7 @@ export function HeroSection() {
           transition={{ duration: 0.6, delay: 0.3 }}
           className="flex flex-col sm:flex-row items-center justify-center gap-4"
         >
-          <Link to="/register">
+          <Link to="/recommendations">
             <Button size="lg" className="group px-8 py-6 text-base font-semibold bg-gradient-to-r from-primary to-accent hover:opacity-90 transition-all duration-300">
               <span className="flex items-center gap-2">
                 Get Personalized Recommendations

@@ -11,6 +11,7 @@ import Courses from './pages/Courses';
 import CourseView from './pages/CourseView';
 import EditCourse from './pages/EditCourse';
 import Profile from './pages/Profile';
+import Recommendations from './pages/Recommendations';
 import { AuthProvider, AuthContext } from './context/AuthContext';
 import { ThemeProvider } from 'next-themes';
 
@@ -69,6 +70,7 @@ function AppRoutes() {
 
       {/* Learner-only */}
       <Route path="/course/:id" element={<PublicOnlyForProvider><CourseView /></PublicOnlyForProvider>} />
+      <Route path="/recommendations" element={<PublicOnlyForProvider><Recommendations /></PublicOnlyForProvider>} />
 
       {/* Provider-only */}
       <Route path="/add-course" element={<ProviderRoute><AddCourse /></ProviderRoute>} />

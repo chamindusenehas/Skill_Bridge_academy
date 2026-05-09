@@ -67,13 +67,13 @@ export function CTASection() {
               transition={{ duration: 0.5, delay: 0.3 }}
               className="flex flex-col sm:flex-row items-center justify-center gap-4"
             >
-              <Link to="/register">
+              <Link to="/recommendations">
                 <Button size="lg" className="group px-8 py-6 text-base font-semibold bg-white text-primary hover:bg-white/90 transition-all">
                   Get Free Recommendations
                   <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                 </Button>
               </Link>
-              <Link to="/dashboard">
+              <Link to="/courses">
                 <Button size="lg" variant="outline" className="px-8 py-6 text-base font-semibold border-white/30 text-white bg-white/10 hover:bg-white/20 hover:border-white/50 transition-all backdrop-blur-sm">
                   Explore All Courses
                 </Button>
