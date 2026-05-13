@@ -36,51 +36,91 @@ const CourseView = () => {
   const [updatingProgress, setUpdatingProgress] = useState(false)
 
   useEffect(() => {
-    const fetchCourse = async () => {
-      try {
-        const res = await fetch(`http://localhost:5000/api/courses/${id}`)
-        const data = await res.json()
-        if (res.ok) {
-          setCourse(data.course)
-          if (data.course.sections?.length > 0 && data.course.sections[0].videos?.length > 0) {
-            setActiveVideo(data.course.sections[0].videos[0])
-          }
-        }
-      } catch (err) {
-        console.error('Failed to fetch course', err)
-      } finally {
-        setLoading(false)
-      }
-    }
+    let mounted = true;
 
-    const checkEnrollment = async () => {
-      if (!user || user.role !== 'learner') return // Only check for learners
+    const loadCourseData = async () => {
       try {
-        const res = await fetch('http://localhost:5000/api/enrollments/my', {
-          headers: { Authorization: `Bearer ${token}` }
-        })
-        if (res.ok) {
-          const data = await res.json()
-          const enrolledIds = new Set((data.enrollments || []).map(e => e.course_id || e._id))
-          if (enrolledIds.has(id)) {
-            setIsEnrolled(true)
-            // Fetch progress
-            const progRes = await fetch(`http://localhost:5000/api/enrollments/${id}/progress`, {
-              headers: { Authorization: `Bearer ${token}` }
-            })
-            if (progRes.ok) {
-              const progData = await progRes.json()
-              setProgressData(progData.progress || {})
+        let courseData = null;
+        let progData = {};
+        let isUserEnrolled = false;
+
+        // Fetch Course
+        const courseRes = await fetch(`http://localhost:5000/api/courses/${id}`);
+        if (courseRes.ok) {
+          const data = await courseRes.json();
+          courseData = data.course;
+        }
+
+        // Check Enrollment & Fetch Progress
+        if (user && user.role === 'learner') {
+          const enrollRes = await fetch('http://localhost:5000/api/enrollments/my', {
+            headers: { Authorization: `Bearer ${token}` }
+          });
+          if (enrollRes.ok) {
+            const enrollData = await enrollRes.json();
+            const enrolledIds = new Set((enrollData.enrollments || []).map(e => e.course_id || e._id));
+            if (enrolledIds.has(id)) {
+              isUserEnrolled = true;
+              const progRes = await fetch(`http://localhost:5000/api/enrollments/${id}/progress`, {
+                headers: { Authorization: `Bearer ${token}` }
+              });
+              if (progRes.ok) {
+                const progJson = await progRes.json();
+                progData = progJson.progress || {};
+              }
             }
           }
         }
-      } catch (err) {
-        console.error('Failed to fetch enrollments', err)
-      }
-    }
 
-    fetchCourse()
-    checkEnrollment()
+        if (!mounted) return;
+
+        if (courseData) {
+          setCourse(courseData);
+          if (isUserEnrolled) {
+            setIsEnrolled(true);
+            setProgressData(progData);
+          }
+
+          // Determine last active video for "Continue Learning"
+          let targetSectionIdx = 0;
+          let targetVideo = null;
+
+          if (courseData.sections?.length > 0) {
+            for (let sIdx = 0; sIdx < courseData.sections.length; sIdx++) {
+              const section = courseData.sections[sIdx];
+              if (section.videos?.length > 0) {
+                for (let vIdx = 0; vIdx < section.videos.length; vIdx++) {
+                  const vid = section.videos[vIdx];
+                  if (!progData[vid.file_path]?.done) {
+                    targetSectionIdx = sIdx;
+                    targetVideo = vid;
+                    break;
+                  }
+                }
+              }
+              if (targetVideo) break;
+            }
+
+            // Fallback to first video if all completed or no progress
+            if (!targetVideo && courseData.sections[0].videos?.length > 0) {
+              targetSectionIdx = 0;
+              targetVideo = courseData.sections[0].videos[0];
+            }
+
+            setActiveSection(targetSectionIdx);
+            setActiveVideo(targetVideo);
+          }
+        }
+      } catch (err) {
+        console.error('Failed to load course details', err);
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    };
+
+    loadCourseData();
+
+    return () => { mounted = false; };
   }, [id, user, token])
 
   const handleEnroll = async () => {
@@ -190,7 +230,13 @@ const CourseView = () => {
                     src={getMediaUrl(activeVideo.file_path)} 
                     controls 
                     autoPlay
-                    onLoadedMetadata={(e) => setVideoDuration(e.target.duration)}
+                    onLoadedMetadata={(e) => {
+                      setVideoDuration(e.target.duration);
+                      const savedProgress = progressData[activeVideo.file_path];
+                      if (savedProgress && !savedProgress.done && savedProgress.watched_time > 0) {
+                        e.target.currentTime = savedProgress.watched_time;
+                      }
+                    }}
                     onTimeUpdate={handleTimeUpdate}
                     onEnded={(e) => handleUpdateProgress(activeVideo, e.target.duration, e.target.duration, true)}
                     className="w-full h-full object-contain"

@@ -68,8 +68,8 @@ function AppRoutes() {
       <Route path="/dashboard" element={<NonAdminRoute><AuthRoute><Dashboard /></AuthRoute></NonAdminRoute>} />
       <Route path="/profile" element={<NonAdminRoute><AuthRoute><Profile /></AuthRoute></NonAdminRoute>} />
 
-      {/* Learner-only */}
-      <Route path="/course/:id" element={<PublicOnlyForProvider><CourseView /></PublicOnlyForProvider>} />
+      {/* Course view (Accessible to learners, providers, and public) */}
+      <Route path="/course/:id" element={<NonAdminRoute><CourseView /></NonAdminRoute>} />
       <Route path="/recommendations" element={<PublicOnlyForProvider><Recommendations /></PublicOnlyForProvider>} />
 
       {/* Provider-only */}

@@ -7,13 +7,13 @@ const steps = [
   {
     number: '01', icon: UserPlus, title: 'Create Your Profile',
     description: 'Sign up and tell us about your background, experience level, and career aspirations.',
-    details: ['Quick registration process', 'Connect with GitHub or LinkedIn', 'Secure authentication'],
+    details: ['Quick registration process', 'Connect with your email', 'Secure authentication'],
     color: 'from-blue-500 to-cyan-500',
   },
   {
     number: '02', icon: ClipboardList, title: 'Answer Smart Questions',
     description: 'Complete our AI-powered questionnaire covering your skills, interests, and learning goals.',
-    details: ['5-8 dropdown-based questions', 'STEM knowledge assessment', 'Career goal identification'],
+    details: ['5 questions that helps to assess your skills', 'STEM knowledge assessment', 'Career goal identification'],
     color: 'from-purple-500 to-pink-500',
   },
   {
@@ -25,7 +25,7 @@ const steps = [
   {
     number: '04', icon: GraduationCap, title: 'Start Learning',
     description: 'Receive personalized course recommendations and begin your learning journey immediately.',
-    details: ['Curated course list', 'Progress tracking', 'Certificate upon completion'],
+    details: ['Curated course list', 'Progress tracking', 'Free to learn'],
     color: 'from-green-500 to-emerald-500',
   },
 ]
